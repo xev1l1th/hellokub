@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hellokub
+spec:
+  selector:
+    matchLabels:
+      app: hellokub
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: hellokub
+    spec:
+      containers:
+      - name: hellokub
+        image: xev1l/hellokub
+        ports:
+        - containerPort: 8080
+        env:
+          - name: USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: roflankub-config
+                key: username
