@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: hellokub
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+        all-namespaces: true
+      reload:
+        enabled: true
+        mode: event
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    restart:
+      enabled: true

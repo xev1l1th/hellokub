@@ -1,25 +1,49 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hellokub
+  name: hellokub-v1
+  labels:
+    app: hellokub
+    version: v1
 spec:
   selector:
     matchLabels:
       app: hellokub
+      version: v1
   replicas: 2 
   template:
     metadata:
       labels:
         app: hellokub
+        version: v1
     spec:
       containers:
       - name: hellokub
-        image: xev1l/hellokub
+        image: xev1l/hellokub:v1
         ports:
         - containerPort: 8080
-        env:
-          - name: USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: roflankub-config
-                key: username
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hellokub-v2
+  labels:
+    app: hellokub
+    version: v2
+spec:
+  selector:
+    matchLabels:
+      app: hellokub
+      version: v2
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hellokub
+        version: v2
+    spec:
+      containers:
+        - name: hellokub
+          image: xev1l/hellokub:v2
+          ports:
+            - containerPort: 8080

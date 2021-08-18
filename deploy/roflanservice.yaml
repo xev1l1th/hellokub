@@ -7,5 +7,6 @@ spec:
     app: hellokub
   ports:
     - protocol: TCP
+      name: tcp-roflankube
       port: 8081
       targetPort: 8080

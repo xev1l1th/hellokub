@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: hellokub-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hellokub
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - hellokub-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /roflan
+      route:
+        - destination:
+            host: hellokub
+            port:
+              number: 8081
+    - match:
+        - uri:
+            prefix: /someservice
+      rewrite:
+        uri: /some
+      route:
+        - destination:
+            host: someservice
+            port:
+              number: 9091

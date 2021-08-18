@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hellokub-destonation
+spec:
+  host: hellokub
+  trafficPolicy: # Apply to all ports
+    portLevelSettings:
+      - port:
+          number: 8081
+        loadBalancer:
+          simple: ROUND_ROBIN

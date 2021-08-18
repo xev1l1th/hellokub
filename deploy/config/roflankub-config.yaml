@@ -1,8 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: roflan-config.yaml
+  name: hellokub
+  labels:
+    spring.cloud.kubernetes.config: "true"
 data:
-  roflanconfig.yaml: |
-    username: therealyou
-username: therealyou
+
+  application.properties: |-
+    microuser.name=papanya
+    microuser.password=password
+    microuser.username=zxc
