@@ -22,6 +22,6 @@ public class HelloKub {
 
     @GetMapping("/roflan")
     public String roflan(){
-        return "without config values, v2";
+        return roflanConfig.getUsername() + " " + roflanConfig.getPassword();
     }
 }
