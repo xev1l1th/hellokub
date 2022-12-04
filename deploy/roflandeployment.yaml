@@ -10,9 +10,11 @@ spec:
     matchLabels:
       app: hellokub
       version: v1
-  replicas: 2 
+  replicas: 2
   template:
     metadata:
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
       labels:
         app: hellokub
         version: v1
@@ -22,6 +24,26 @@ spec:
         image: xev1l/hellokub:v1
         ports:
         - containerPort: 8080
+        env:
+          - name: OTEL_SERVICE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
+          - name: JAVA_TOOL_OPTIONS
+            value: "-javaagent:/otlpagent/opentelemetry-javaagent-all.jar"
+        volumeMounts:
+          - mountPath: /otlpagent
+            name: agentdir
+      volumes:
+      - name: agentdir
+        emptyDir: {}
+      initContainers:
+        - name: init-otlp-agent
+          image: localhost:5000/init-otlp-agent
+          command: ["cp", "/opentelemetry-javaagent-all.jar", "/otlpagent/"]
+          volumeMounts:
+            - name: agentdir
+              mountPath: "/otlpagent"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,6 +60,8 @@ spec:
   replicas: 2
   template:
     metadata:
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
       labels:
         app: hellokub
         version: v2
@@ -47,3 +71,23 @@ spec:
           image: xev1l/hellokub:v2
           ports:
             - containerPort: 8080
+          env:
+            - name: OTEL_SERVICE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+            - name: JAVA_TOOL_OPTIONS
+              value: "-javaagent:/otlpagent/opentelemetry-javaagent-all.jar"
+          volumeMounts:
+            - mountPath: /otlpagent
+              name: agentdir
+      volumes:
+        - name: agentdir
+          emptyDir: {}
+      initContainers:
+        - name: init-otlp-agent
+          image: localhost:5000/init-otlp-agent
+          command: ["cp", "/opentelemetry-javaagent-all.jar", "/otlpagent/"]
+          volumeMounts:
+            - name: agentdir
+              mountPath: "/otlpagent"
