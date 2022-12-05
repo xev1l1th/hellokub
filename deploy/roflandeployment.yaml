@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hellokub-v1
+  namespace: default
   labels:
     app: hellokub
     version: v1
@@ -10,7 +11,7 @@ spec:
     matchLabels:
       app: hellokub
       version: v1
-  replicas: 2 
+  replicas: 1
   template:
     metadata:
       labels:
@@ -19,31 +20,7 @@ spec:
     spec:
       containers:
       - name: hellokub
-        image: xev1l/hellokub:v1
+        image: localhost:5000/hellokub:v1
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hellokub-v2
-  labels:
-    app: hellokub
-    version: v2
-spec:
-  selector:
-    matchLabels:
-      app: hellokub
-      version: v2
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        app: hellokub
-        version: v2
-    spec:
-      containers:
-        - name: hellokub
-          image: xev1l/hellokub:v2
-          ports:
-            - containerPort: 8080
